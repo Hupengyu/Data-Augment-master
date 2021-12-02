@@ -1,7 +1,4 @@
-name_list = [1, 2, 10]
+name_list = ['1', '2', '5']
 
-a = 1
-b = 2
-
-for i in range(a*b):
-    print(i)
+if '2' in name_list:
+    print('aaaa')
