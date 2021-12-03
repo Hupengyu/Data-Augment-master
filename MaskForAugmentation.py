@@ -81,7 +81,7 @@ def _Mask_Image(num, annotation, file, occlusion, ratio):
     Using the image to occlusion objects at a certain ratio.
       num: the number of object in the picture
       annotation: the information of object annotation
-      file: the xml file name
+      1: the xml 1 name
       occlusion: the number of occlusion picture
       ratio: the ratio of occlusioning area
     """
@@ -154,7 +154,7 @@ def _Mask_Filling(num, annotation, file, ratio):
     Using the certain color to filling the object for occlusioning
     num: the number of object in the picture
     annotation: the information of object annotation
-    file: the xml file name
+    1: the xml 1 name
     ratio: the ratio of occlusioning area
     """
     """使用某一颜色的色块对目标遮挡"""

@@ -1,85 +1,9 @@
-import xml.etree.ElementTree as ET
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
 import os
+import xml.etree.ElementTree as ET
 import shutil
-
-
-def read_xml_annotation(root, image_id):
-    in_file = open(os.path.join(root, image_id))
-    tree = ET.parse(in_file)
-    root = tree.getroot()
-    bndboxlist = []
-
-    for object in root.findall('object'):  # 找到root节点下的所有country节点
-        bndbox = object.find('bndbox')  # 子节点下节点rank的值
-
-        xmin = int(bndbox.find('xmin').text)
-        xmax = int(bndbox.find('xmax').text)
-        ymin = int(bndbox.find('ymin').text)
-        ymax = int(bndbox.find('ymax').text)
-        # print(xmin,ymin,xmax,ymax)
-        bndboxlist.append([xmin, ymin, xmax, ymax])
-        # print(bndboxlist)
-
-    bndbox = root.find('object').find('bndbox')
-    return bndboxlist
-
-
-# (506.0000, 330.0000, 528.0000, 348.0000) -> (520.4747, 381.5080, 540.5596, 398.6603)
-def change_xml_annotation(root, image_id, new_target):
-    new_xmin = new_target[0]
-    new_ymin = new_target[1]
-    new_xmax = new_target[2]
-    new_ymax = new_target[3]
-
-    in_file = open(os.path.join(root, str(image_id) + '.xml'))  # 这里root分别由两个意思
-    tree = ET.parse(in_file)
-    xmlroot = tree.getroot()
-    object = xmlroot.find('object')
-    bndbox = object.find('bndbox')
-    xmin = bndbox.find('xmin')
-    xmin.text = str(new_xmin)
-    ymin = bndbox.find('ymin')
-    ymin.text = str(new_ymin)
-    xmax = bndbox.find('xmax')
-    xmax.text = str(new_xmax)
-    ymax = bndbox.find('ymax')
-    ymax.text = str(new_ymax)
-    tree.write(os.path.join(root, str("%06d" % (str(id) + '.xml'))))
-
-
-def change_xml_list_annotation(root, image_id, new_target, saveroot, id):
-    in_file = open(os.path.join(root, str(image_id) + '.xml'))  # XML_DIR/03001.xml
-    tree = ET.parse(in_file)
-    elem = tree.find('filename')  # <filename>03001.jpg</filename>
-    elem.text = (id + '.jpg')  # '030010'
-    xmlroot = tree.getroot()
-    index = 0
-
-    for object in xmlroot.findall('object'):  # 找到root节点下的所有country节点
-        bndbox = object.find('bndbox')  # 子节点下节点rank的值
-
-        # xmin = int(bndbox.find('xmin').text)
-        # xmax = int(bndbox.find('xmax').text)
-        # ymin = int(bndbox.find('ymin').text)
-        # ymax = int(bndbox.find('ymax').text)
-
-        new_xmin = new_target[index][0]
-        new_ymin = new_target[index][1]
-        new_xmax = new_target[index][2]
-        new_ymax = new_target[index][3]
-
-        xmin = bndbox.find('xmin')
-        xmin.text = str(new_xmin)
-        ymin = bndbox.find('ymin')
-        ymin.text = str(new_ymin)
-        xmax = bndbox.find('xmax')
-        xmax.text = str(new_xmax)
-        ymax = bndbox.find('ymax')
-        ymax.text = str(new_ymax)
-
-        index = index + 1
-
-    tree.write(os.path.join(saveroot, id + '.xml'))
 
 
 def mkdir(path):
@@ -104,55 +28,47 @@ def mkdir(path):
         return False
 
 
-def get_annotation_category(root, image_id):
-    in_file = open(os.path.join(root, image_id))
-    tree = ET.parse(in_file)
-    root = tree.getroot()
-    name_list = []
-    smoke_exist = False
+def del_xml_object(origin_ann_dir, new_ann_dir):
+    for dirpaths, dirnames, filenames in os.walk(origin_ann_dir):  # os.walk游走遍历目录名
+        for filename in filenames:
+            print("process...")
+            if os.path.isfile(r'%s%s' % (origin_ann_dir, filename)):  # 获取原始xml文件绝对路径，isfile()检测是否为文件 isdir检测是否为目录
+                origin_ann_path = os.path.join(r'%s%s' % (origin_ann_dir, filename))  # 如果是，获取绝对路径（重复代码）
+                new_ann_path = os.path.join(r'%s%s' % (new_ann_dir, filename))
+                tree = ET.parse(origin_ann_path)  # ET是一个xml文件解析库，ET.parse（）打开xml文件。parse--"解析"
+                root = tree.getroot()  # 获取根节点
+                for object in root.findall('object'):  # 找到根节点下所有“object”节点
+                    name = str(object.find('name').text)  # 找到object节点下name子节点的值（字符串）
+                    # 如果name等于str，则删除该节点
+                    if (name in ["1"]):
+                        root.remove(object)
 
-    for object in root.findall('object'):  # 循环查看img下面所有的object
-        name = object.find('name')  # 记录object下面的name值
-        name_list.append(name.text)     # 将所有的name-object记录在name_list中
+                    # 如果name等于str，则修改name
+                    # if (name in ["6"]):
+                    #     object.find('name').text = "9"
 
-    # 按name的优先级对name_list进行索引
-    if '5' in name_list:
-        smoke_exist = True
-
-    return smoke_exist
+                # # 检查是否存在labelmap中没有的类别
+                # for object in root.findall('object'):
+                #     name = str(object.find('name').text)
+                #     if not (name in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]):
+                #         print(filename + "------------->label is error--->" + name)
+                tree.write(new_ann_path)  # tree为文件，write写入新的文件中。
 
 
 if __name__ == "__main__":
-
-    XML_DIR = "/home/project/oyj/VOCdevkit/VOC2020/AnnotationsOri"
-
-    SMOKE_XML_DIR = "/home/project/oyj/VOCdevkit/VOC2020/SmokeAnnotationsOri"
+    origin_ann_dir = 'BreatheMaskAnnotationsOri/'  # 设置原始标签路径为 Annos
+    new_ann_dir = 'BreatheMaskAnnotationsOri/'  # 设置新标签路径 Annotations
 
     try:
-        shutil.rmtree(SMOKE_XML_DIR)
+        shutil.rmtree(origin_ann_dir)
     except FileNotFoundError as e:
         a = 1
-    mkdir(SMOKE_XML_DIR)
+    mkdir(origin_ann_dir)
 
-    boxes_img_aug_list = []
-    new_bndbox = []
-    new_bndbox_list = []
+    try:
+        shutil.rmtree(new_ann_dir)
+    except FileNotFoundError as e:
+        a = 1
+    mkdir(new_ann_dir)
 
-    for root, sub_folders, files in os.walk(XML_DIR):
-
-        for name in files:  # 每一个文件的名称
-            try:
-                bndbox = read_xml_annotation(XML_DIR, name)
-            except:
-                print('*********xml无标注**********')
-                continue
-            # shutil.copy(os.path.join(XML_DIR, name), SMOKE_XML_DIR)
-            # shutil.copy(os.path.join(IMG_DIR, name[:-4] + '.jpg'), SMOKE_IMG_DIR)
-
-            # 检测标签类别，确定吸烟数据集
-            smoke_exist = get_annotation_category(XML_DIR, name)
-            print(smoke_exist)
-
-            if smoke_exist:
-                print('copy')
-                shutil.copy(os.path.join(XML_DIR, name), SMOKE_XML_DIR)
+    del_xml_object(origin_ann_dir, new_ann_dir)
