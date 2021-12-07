@@ -10,6 +10,6 @@ for f, file in enumerate(files):
 
     for j in fline:
         s = j
-        if j[:1] == '1' or '2':
-            s = '5' + j[1:]
+        if j[:1] == '5' or '6':
+            s = '10' + j[1:]
         savetxt.write(s)  # 写入新的文件中
