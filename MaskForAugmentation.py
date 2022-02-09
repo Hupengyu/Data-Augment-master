@@ -2,7 +2,7 @@
 File: MaskForAugmentation.py
 """
 from PIL import Image
-from pylab import *
+# from pylab import *
 import os
 import xml.etree.ElementTree as ET
 import random
@@ -14,8 +14,8 @@ mask_image_dir存放生成的图片，anno_dir存放生成的xml
 occlusion_dir存放作为遮挡的图片
 up_path存放作为上半部分遮挡的图片
 """
-anno_dir = 'AnnotationsOri/'    # 标签文件夹
-image_dir = 'JPEGImagesOri/'    # 图片文件夹
+anno_dir = 'Garbage_Annotations_Aug/'  # 标签文件夹
+image_dir = 'Garbage_JPEGImages_Aug/'    # 图片文件夹
 mask_image_dir = 'JPEGImages/'  # 存储遮挡后的图片的文件夹
 mask_xml_dir = 'Annotations/'   # 存储遮挡后的xml的文件夹(所有的遮挡并不会改变xml的信息——因为遮挡不会更改位置)
 occlusion_dir = 'occ/'  # 遮挡所使用的图片的文件夹

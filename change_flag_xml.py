@@ -104,7 +104,7 @@ def mkdir(path):
         return False
 
 
-def get_annotation_category(root):
+def get_annotation_category(root, NEW_DIR):
     in_file = open(root)
     tree = ET.parse(in_file)
     root = tree.getroot()
@@ -113,17 +113,18 @@ def get_annotation_category(root):
 
     for object in root.findall('object'):  # 循环查看img下面所有的object
         name = object.find('name')  # 记录object下面的name值
-        name_list.append(name.text)     # 将所有的name-object记录在name_list中
+        name_list.append(name.text)  # 将所有的name-object记录在name_list中
 
     # 按name的优先级对name_list进行索引
     print(name_list)
-    if '5' in name_list:
-        smoke_exist = True
-
-    return smoke_exist
+    for name in name_list:
+        if name == '2':
+            name = '2222222222'
+    tree.write(NEW_DIR)
 
 
 if __name__ == "__main__":
     XML_DIR = "0005027747.xml"
+    NEW_DIR = "1"
 
-    smoke_exist = get_annotation_category(XML_DIR)
+    get_annotation_category(XML_DIR, NEW_DIR)

@@ -40,7 +40,7 @@ def del_xml_object(origin_ann_dir, new_ann_dir):
                 for object in root.findall('object'):  # 找到根节点下所有“object”节点
                     name = str(object.find('name').text)  # 找到object节点下name子节点的值（字符串）
                     # 如果name等于str，则删除该节点
-                    if name in ["1"]:
+                    if (name in ["1", "2", "3"]):
                         root.remove(object)
 
                     # 如果name等于str，则修改name
@@ -52,14 +52,23 @@ def del_xml_object(origin_ann_dir, new_ann_dir):
                 #     name = str(object.find('name').text)
                 #     if not (name in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]):
                 #         print(filename + "------------->label is error--->" + name)
-                tree.write(new_ann_path)  # tree为文件，write写入新的文件中。
+                    tree.write(new_ann_path)  # tree为文件，write写入新的文件中。
 
 
 if __name__ == "__main__":
-    origin_ann_dir = 'Annotations/'  # 设置原始标签路径为 Annos
-    new_ann_dir = 'Annotations-1/'  # 设置新标签路径 Annotations
+    origin_ann_dir = 'BreatheMaskAnnotationsOri/'  # 设置原始标签路径为 Annos
+    new_ann_dir = 'BreatheMaskAnnotationsOri-1/'  # 设置新标签路径 Annotations
 
+    # try:
+    #     shutil.rmtree(origin_ann_dir)
+    # except FileNotFoundError as e:
+    #     a = 1
     mkdir(origin_ann_dir)
+    #
+    # try:
+    #     shutil.rmtree(new_ann_dir)
+    # except FileNotFoundError as e:
+    #     a = 1
     mkdir(new_ann_dir)
 
     del_xml_object(origin_ann_dir, new_ann_dir)
