@@ -120,7 +120,7 @@ def get_annotation_category(root, NEW_DIR):
     for name in name_list:
         if name == '2':
             name = '2222222222'
-    tree.write(NEW_DIR)
+    tree.write(NEW_DIR + '.xml')
 
 
 if __name__ == "__main__":

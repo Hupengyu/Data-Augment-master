@@ -18,7 +18,7 @@ anno_dir = 'Garbage_Annotations_Aug/'  # 标签文件夹
 image_dir = 'Garbage_JPEGImages_Aug/'    # 图片文件夹
 mask_image_dir = 'JPEGImages/'  # 存储遮挡后的图片的文件夹
 mask_xml_dir = 'Annotations/'   # 存储遮挡后的xml的文件夹(所有的遮挡并不会改变xml的信息——因为遮挡不会更改位置)
-occlusion_dir = 'occ/'  # 遮挡所使用的图片的文件夹
+occlusion_dir = 'img/'  # 遮挡所使用的图片的文件夹
 Ratio = [1 / 4, 1 / 2, 3 / 4]
 IsImage = False  # 使用图片进行遮挡
 IsFilling = True    # 使用纯色进行遮挡
@@ -36,7 +36,7 @@ def _main():
             # ra = random.randint(0, len(filelist_occlusion) - 1)     # 确定遮挡图片
             occ = random.randint(0, len(Ratio) - 1)     # 确定遮挡比例
             # if IsImage:
-            #     _Mask_Image(j, annos[j], anno_file, filelist_occlusion[ra], Ratio[occ])
+            #     _Mask_Image(j, annos[j], anno_file, filelist_occlusion[ra], Ratio[img])
             if IsFilling:
                 _Mask_Filling(j, annos[j], anno_file, Ratio[occ])
         print(file + ': ' + str(num))

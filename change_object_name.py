@@ -25,4 +25,4 @@ def changeName(xml_fold, origin_name, new_name):
 
 
 if __name__ == '__main__':
-    changeName('Annotations', '19', '13')
+    changeName('17_混凝土露筋/17_xml', '20', '17')
