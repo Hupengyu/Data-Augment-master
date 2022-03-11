@@ -40,8 +40,9 @@ def del_xml_object(origin_ann_dir, new_ann_dir):
                 for object in root.findall('object'):  # 找到根节点下所有“object”节点
                     name = str(object.find('name').text)  # 找到object节点下name子节点的值（字符串）
                     # 如果name等于str，则删除该节点
-                    if name in ["1"]:
+                    if name in ["222"]:
                         root.remove(object)
+
 
                     # 如果name等于str，则修改name
                     # if (name in ["6"]):
@@ -56,7 +57,7 @@ def del_xml_object(origin_ann_dir, new_ann_dir):
 
 
 if __name__ == "__main__":
-    origin_ann_dir = 'Annotations/'  # 设置原始标签路径为 Annos
+    origin_ann_dir = 'xml/'  # 设置原始标签路径为 Annos
     new_ann_dir = 'Annotations-1/'  # 设置新标签路径 Annotations
 
     mkdir(origin_ann_dir)

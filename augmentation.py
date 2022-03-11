@@ -210,6 +210,7 @@ if __name__ == "__main__":
                 img = Image.open(os.path.join(IMG_DIR, name[:-4] + '.jpg'))
                 # sp = img.size
                 img = np.asarray(img)
+                xml_error = False
                 # 对该img中的所有bndbox进行坐标增强
                 for i in range(len(bndbox)):
                     bbs = ia.BoundingBoxesOnImage([
@@ -230,11 +231,16 @@ if __name__ == "__main__":
                         n_y2 += 1
                     if n_x1 >= n_x2 or n_y1 >= n_y2:
                         print('error', name)
+                        xml_error = True
+                        continue
                     new_bndbox_list.append([n_x1, n_y1, n_x2, n_y2])
 
                     # image_aug = seq_det.augment_images([img])[0]
                     # image_auged = bbs_aug.draw_on_image(image_aug, thickness=1)
                     # ia.imshow(image_auged)  # visual
+                if xml_error:
+                    xml_error = False
+                    continue
 
                 # 对该img进行图像增强
                 image_aug = seq_det.augment_images([img])[0]
@@ -248,7 +254,10 @@ if __name__ == "__main__":
                 # 存储变化后的XML
                 # change_xml_list_annotation(XML_DIR, name[:-4], new_bndbox_list, AUG_XML_DIR,
                 #                            len(files) + int(name[:-4]) + epoch * 250)
-                change_xml_list_annotation(XML_DIR, name[:-4], new_bndbox_list, AUG_XML_DIR,
-                                           name[:-4] + '-' + str(epoch))
+                try:
+                    change_xml_list_annotation(XML_DIR, name[:-4], new_bndbox_list, AUG_XML_DIR,
+                                               name[:-4] + '-' + str(epoch))
+                except:
+                    print("change_xml_list_annotation error!")
                 print(name[:-4] + '-' + str(epoch) + '.jpg')  # 图像保存的路径
                 new_bndbox_list = []
